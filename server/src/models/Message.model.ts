@@ -7,11 +7,13 @@ interface Imessage extends Document {
   readedBy: [Types.ObjectId];
 }
 const messageSchema = new Schema<Imessage>({
-  sender: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  content: { type: String, unique: true, required: true },
-  chats: { type: Schema.Types.ObjectId, ref: "Chat", required: true },
+  sender: { type: Schema.Types.ObjectId, ref: "User",  },
+  content: { type: String, trim: true },
+  chats: { type: Schema.Types.ObjectId, ref: "Chat",  },
 
-  readedBy: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
+  readedBy: [{ type: Schema.Types.ObjectId, ref: "User",  }],
 },{timestamps:true});
 
 const Message = models?.Message || model<Imessage>("Message", messageSchema);
+
+export default Message

@@ -47,7 +47,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
       username,
       phone,
       password,
-      pic: picurl?.secure_url,
+      avatar: picurl?.secure_url,
     });
     if (user) {
       const { accesstoken, refreshtoken } = await AccessandRefreshToken(
@@ -64,7 +64,7 @@ const registerUser = async (req: Request, res: Response): Promise<void> => {
         _id: user._id,
         username: user.username,
         phone: user.phone,
-        pic: user.pic,
+        avatar: user.avatar,
         token: accesstoken,
         
       });
@@ -95,14 +95,14 @@ const loginUser = async (req: Request, res: Response): Promise<void> => {
     };
     const { accesstoken, refreshtoken } = await AccessandRefreshToken(user._id);
 
-    res.status(201).cookie("accesstoken", accesstoken, option).cookie("refresh", refreshtoken, option).json({
+    res.status(201).cookie("accesstoken", accesstoken, option).json({
       success: true,
 
       message: "Login Successfully",
       _id: user._id,
       username: user.username,
       phone: user.phone,
-      pic: user.pic,
+      avatar: user.avatar,
       token: accesstoken,
       
     });
@@ -122,7 +122,7 @@ const LogOut = async (req: AuhtRequest, res: Response) => {
       httpOnly: true,
       secure: true,
     };
-    res.status(201).clearCookie("accesstoken", option).json({
+    res.status(201).clearCookie("accesstoken", option).clearCookie("refresh", option).clearCookie("refreshtoken", option).json({
       success: true,
       message: "Logout success",
     });
@@ -131,33 +131,7 @@ const LogOut = async (req: AuhtRequest, res: Response) => {
   }
 };
 
-//const validate = async (req: Request, res: Response) => {
-//  const token = req.cookies.accesstoken
-//  if (!token) { res.status(401).json({ message: 'Unauthorized' })
-//    return
-//  }
-//    const user = await User.findOne() // You may need user to check role/email match
 
-//  if (!user) { res.status(401).json({ message: 'User not found' })
-//    return
-//  }
-
-//  const result = user.validateToken(token)
-//  if(!result.valid){
-//    res.status(401).json({ message: result.error})
-//  }
-   
-//  res.status(200).json({ message: "validuser"})
-
-//}
-
-
-//const hi = async()=>{
-//  const dser =await User.deleteMany({})
-//  console.log(dser);
-
-//}
-//hi()
 
 
 
@@ -181,10 +155,40 @@ const getCurrentUserInfo = async (req: AuhtRequest, res: Response) => {
     });
     
   } catch (error) {
-    console.error("Error in getCurrentUserInfo:", error);
+    console.log("Error in getCurrentUserInfo:", error);
      res.status(500).json({ success: false, message: "Internal Server Error" });
      return
   }
 };
+const SearchUsers = async(req: AuhtRequest, res: Response)=>{
+  const searchData = req.query.search;
+  const user_Id = req.userInfo
+  
+  
+  if(!user_Id){
+    res.status(400).json({success:false,message:"User Not Authenticated"})
+    return
+  }
+  const searchresult = searchData ? {
+     $or: [
+          { username: { $regex: req.query.search, $options: "i" } },
+          { phone: { $regex: req.query.search } },
+        ]
+  }
+  :
+  {}
+  const user = await User.find({
+    ...searchresult,_id:{$ne:user_Id}
+  }).select("_id username phone avatar ");
+  if(!user){
+    res.status(400).json({success:false,message:"User Not Found"})
+    return
+  }
+  res.status(200).json({
+      success: true,
+      user,
+      
+    });
+}
 
-export { registerUser, loginUser, LogOut ,getCurrentUserInfo};
+export { registerUser, loginUser, LogOut ,getCurrentUserInfo,SearchUsers};

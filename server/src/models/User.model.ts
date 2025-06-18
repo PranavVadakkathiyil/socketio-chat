@@ -10,7 +10,7 @@ const JWT_REFRESH_EXPAIRE = process.env.JWT_REFRESH_EXPAIRE
 interface Iuser extends Document{
     _id:Types.ObjectId;
     username:string;
-    phone:number;
+    phone:string;
     password:string;
     avatar:string;
     Isadmin:boolean;
@@ -19,7 +19,7 @@ interface Iuser extends Document{
 }
 const userSchema = new Schema<Iuser>({
     username:{type:String,required:true},
-    phone:{type:Number,unique:true,required:true},
+    phone:{type:String,unique:true,required:true},
     password:{type:String,required:true},
     avatar:{type:String,required:true,
         default:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"

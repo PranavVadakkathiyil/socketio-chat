@@ -16,10 +16,13 @@ app.use(express.static('public'))
 
 
 import UserRoute from './routes/User.route'
-
+import MessageRoute from './routes/Message.route'
+import ChatRoute from './routes/Chat.route'
 
 
 app.use('/api/v1/user',UserRoute)
+app.use('/api/v1/message',MessageRoute)
+app.use('/api/v1/chat',ChatRoute)
 
 
 

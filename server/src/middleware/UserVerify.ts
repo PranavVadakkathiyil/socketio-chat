@@ -17,7 +17,7 @@ const UserVerify = async (req: UserRequest, res: Response, next: NextFunction) =
     const token =
       req.cookies.accesstoken || req.header("Authorization")?.replace("Bearer ", "");
 
-    console.log("Access Token:", token);
+    
 
     if (!token) {
        res.status(401).json({ success: false, message: "Unauthorized: No token" });

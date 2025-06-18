@@ -15,12 +15,14 @@ const chatSchema = new Schema<Ichat>(
     latestMessage: {
       type: Schema.Types.ObjectId,
       ref: "Message",
-      required: true,
+      
     },
 
-    groupAdmin: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    groupAdmin: { type: Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
 
 const Chat = models?.Chat || model<Ichat>("Chat", chatSchema);
+
+export default Chat
