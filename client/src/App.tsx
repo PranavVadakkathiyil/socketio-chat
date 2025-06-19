@@ -3,6 +3,7 @@ import Header from "./layout/Header"
 import Auth from "./pages/Auth"
 import ChatHome from "./pages/ChatHome"
 import { Toaster } from "react-hot-toast"
+import ViewChat from "./Components/ViewChat"
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Auth/>}/>
       <Route path="/home" element={<ChatHome/>}/>
+      <Route path="/chat/:id" element={<ViewChat/>}/>
     </Routes>
     </>
   )

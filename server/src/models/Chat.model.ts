@@ -11,7 +11,7 @@ const chatSchema = new Schema<Ichat>(
   {
     chatname: { type: String, trim: true },
     isGroupChat: { type: Boolean, default: false },
-    users: [{ type: Schema.Types.ObjectId, ref: "Chat", required: true }],
+    users: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
     latestMessage: {
       type: Schema.Types.ObjectId,
       ref: "Message",

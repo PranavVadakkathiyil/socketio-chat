@@ -12,6 +12,10 @@ const Logout = async () => {
 const getCurrentUserInfo = async () => {
     return axios.get('/user/getuser')
 } 
+const getUserInfo = async (search:string) => {
+    return axios.get('/user/search',{
+        params:{search}
+    })
+} 
 
-
-export {registerUser,loginUser,Logout,getCurrentUserInfo}
+export {registerUser,loginUser,Logout,getCurrentUserInfo,getUserInfo}

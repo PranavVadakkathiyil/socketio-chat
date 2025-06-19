@@ -2,10 +2,14 @@ import { MdOutlineAttachFile } from 'react-icons/md';
 import { IoMdSend } from 'react-icons/io';
 import loginimg from '../assets/loginimg.svg';
 import { useState, useRef, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const ViewChat = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const {id} = useParams()
+  console.log(id);
+  
 
   // Optional: Close dropdown on outside click
   useEffect(() => {
@@ -19,7 +23,7 @@ const ViewChat = () => {
   }, []);
 
   return (
-    <div className="border border-gray-300 sm:h-[90dvh] h-[90dvh] flex flex-col bg-gray-50">
+    <div className="border border-gray-300 sm:h-[90dvh] h-[100dvh] flex flex-col bg-gray-50">
 
       {/* Header */}
       <div className="w-full border-b border-gray-300 flex items-center gap-3 px-4 py-3 bg-white relative">
@@ -70,19 +74,19 @@ const ViewChat = () => {
       </div>
 
       {/* Footer */}
-      <div className="w-full border-t border-gray-300 flex items-center gap-2 px-3 py-2 bg-white">
-        <button className="text-xl text-gray-600 hover:text-gray-800">
-          <MdOutlineAttachFile />
-        </button>
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-300"
-        />
-        <button className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-full">
-          <IoMdSend className="text-xl" />
-        </button>
-      </div>
+       <div className="w-full border-t border-gray-300 flex items-center gap-2 px-3 py-2 bg-white">
+    <button className="text-xl text-gray-600 hover:text-gray-800">
+      <MdOutlineAttachFile />
+    </button>
+    <input
+      type="text"
+      placeholder="Type a message..."
+      className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-green-300"
+    />
+    <button className="p-2 bg-green-500 hover:bg-green-600 text-white rounded-full">
+      <IoMdSend className="text-xl" />
+    </button>
+  </div>
     </div>
   );
 };

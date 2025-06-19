@@ -64,7 +64,7 @@ const getChat = async (req: AuhtRequest, res: Response): Promise<void> => {
     const chats = await Chat.find({
       users: { $elemMatch: { $eq: req.userInfo._id } },
     })
-      .populate("users", "-password")
+      .populate("users", "-password") 
       .populate("groupAdmin", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 });
