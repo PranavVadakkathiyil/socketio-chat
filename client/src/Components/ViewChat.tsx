@@ -23,7 +23,7 @@ const ViewChat = () => {
   }, []);
 
   return (
-    <div className="border border-gray-300 sm:h-[90dvh] h-[100dvh] flex flex-col bg-gray-50">
+    <div className="border border-gray-300 sm:h-[90dvh] h-[90dvh] flex flex-col bg-gray-50">
 
       {/* Header */}
       <div className="w-full border-b border-gray-300 flex items-center gap-3 px-4 py-3 bg-white relative">

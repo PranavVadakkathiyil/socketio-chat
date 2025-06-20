@@ -5,4 +5,10 @@ import axios from "./Axios";
 const createChats = async(id:string)=>{
     return axios.post('/chat',{receiverId:id})
 }
-export {GetAllChats,createChats}
+const createGroup = (users:string[],groupname:string)=>{
+    return axios.post('/chat/group',{
+        users:JSON.stringify(users),
+        groupname
+    })
+}
+export {GetAllChats,createChats,createGroup}
