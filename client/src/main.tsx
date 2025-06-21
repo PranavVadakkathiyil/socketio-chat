@@ -4,16 +4,19 @@ import './index.css'
 import App from './App.tsx'
 import { BrowserRouter } from 'react-router-dom'
 import { ContextProvider } from './context/addGroup.tsx'
+import { ChatProvider } from './context/ChatContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-    <ContextProvider>
+      <ContextProvider>
+        <ChatProvider>
 
-  <App />
-    </ContextProvider>
-    
+          <App />
+        </ChatProvider>
+      </ContextProvider>
+
     </BrowserRouter>
-    
+
   </StrictMode>,
 )

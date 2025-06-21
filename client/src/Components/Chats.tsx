@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { createChats, GetAllChats } from '../apis/ChatApi'
 import { getUserInfo } from '../apis/UserApi'
 import toast from 'react-hot-toast'
+import { useChatContext } from "../context/ChatContext";
 
 type User = {
   _id: string
@@ -33,6 +34,8 @@ const Chats = () => {
   const [allchat, setallchat] = useState<Chat[]>([])
   const [addGroup, setaddGroup] = useState(false)
   const navigate = useNavigate()
+  const { setSelectedChatId } = useChatContext();
+
 
   const searchuser = async (search: string) => {
     const res = await getUserInfo(search)
@@ -107,7 +110,7 @@ const Chats = () => {
         {searchbar ? (
           <div className="flex-1 overflow-y-auto py-1 px-1">
             {allchat.map((data, i) => (
-              <Link to={`/chat/${data._id}`} key={i}>
+              <div key={i} onClick={() => setSelectedChatId(data._id)} className='cursor-pointer'>
                 <div className="flex items-center gap-3 p-2 border border-gray-300 rounded mb-2 bg-white">
                   <div className="w-12 h-12 border border-gray-500 rounded-full bg-white flex items-center justify-center overflow-hidden">
                     {data.isGroupChat ? (
@@ -128,7 +131,7 @@ const Chats = () => {
                   </div>
                   <span className="w-3 h-3 inline-block rounded-full bg-green-400"></span>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         ) : (
