@@ -42,20 +42,17 @@ export function AuthComponent() {
     e.preventDefault()
     
     setLoading(true)
-    Formdata.forEach((data)=>{
-      console.log(data);
-      
-    })
-
+    
     try {
       if (Login) {
         const res = await loginUser({ phone, password })
-        console.log(res.data);
-        
+       
 
         if (res.data.success) {
           successmsg(res.data.message)
           localStorage.setItem("token", res.data.token)
+          localStorage.setItem("userId", res.data._id)
+
           navigate('/home')
 
 
@@ -69,6 +66,7 @@ export function AuthComponent() {
         if (res.data.success) {
           successmsg(res.data.message)
           localStorage.setItem("token", res.data.token)
+          localStorage.setItem("userId", res.data._id)
           navigate('/home')
 
 

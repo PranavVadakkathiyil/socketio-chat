@@ -15,8 +15,11 @@ const createChat = async (req: AuhtRequest, res: Response): Promise<void> => {
       .json({ success: false, message: "Reciver Required For chat" });
       return
   }
+  
+  
+  
   try {
-    
+     
     const existingChat = await Chat.findOne({
       isGroupChat: false,
       $and: [
@@ -32,6 +35,8 @@ const createChat = async (req: AuhtRequest, res: Response): Promise<void> => {
         path: "latestMessage.sender",
         select: "name avatar phone",
       });
+      
+      
 
       res.status(200).json({ success: true, chat: populatedChat });
       return;
@@ -39,7 +44,7 @@ const createChat = async (req: AuhtRequest, res: Response): Promise<void> => {
 
     
     const chatData = {
-      chatname: "sender",
+      chatname:"sender",
       isGroupChat: false,
       users: [senderId, receiverId],
     };
@@ -51,7 +56,7 @@ const createChat = async (req: AuhtRequest, res: Response): Promise<void> => {
     
     const fullChat = await Chat.findById(newChat._id).populate("users", "-password");
 
-    res.status(200).json({ success: true, message: "Chat created", chat: fullChat });
+    res.status(200).json({ success: true, message: "Chat created", chat: fullChat,senderId });
 
   } catch (error) {
     console.error("Error in createChat:", error);
@@ -61,26 +66,45 @@ const createChat = async (req: AuhtRequest, res: Response): Promise<void> => {
 
 const getChat = async (req: AuhtRequest, res: Response): Promise<void> => {
   try {
+    const senderId = req.userInfo._id;
+
     const chats = await Chat.find({
-      users: { $elemMatch: { $eq: req.userInfo._id } },
+      users: { $elemMatch: { $eq: senderId } },
     })
-      .populate("users", "-password") 
+      .populate("users", "-password")
       .populate("groupAdmin", "-password")
       .populate("latestMessage")
-      .sort({ updatedAt: -1 });
+      .sort({ updatedAt: -1 })
+      .lean(); // Important: so we can mutate objects
+
     const fullChat = await Chat.populate(chats, {
       path: "latestMessage.sender",
       select: "username phone avatar",
     });
-    res
-      .status(200)
-      .json({ success: true, message: "Fetched all messages", fullChat });
+
+    // 👇 Inject receiverInfo in non-group chats
+    fullChat.forEach((chat: any) => {
+      if (!chat.isGroupChat) {
+        const receiver = chat.users.find(
+          (user: any) => user._id.toString() !== senderId.toString()
+        );
+        chat.receiverInfo = receiver;
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Fetched all messages",
+      fullChat,
+      id: senderId,
+    });
   } catch (error) {
     console.log("getChat error", error);
-
     res.status(500).json({ success: false, message: "Error in getchat" });
   }
 };
+
+
 const CreateGroup = async (req: AuhtRequest, res: Response): Promise<void> => {
   const users = req.body.users;
   const groupname = req.body.groupname;

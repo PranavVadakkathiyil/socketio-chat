@@ -20,7 +20,7 @@ const Header = () => {
   const [userdata, setuserdata] = useState<UserData | null>(null);
 
   // Optional: Close dropdown on outside click
-  console.log("Header component loaded");
+  
 
 useEffect(() => {
   
@@ -30,9 +30,7 @@ useEffect(() => {
     try {
       
       const res = await getCurrentUserInfo();
-      console.log(res.data.userdata);
       
-      console.log("User Info Response:", res.data);
       setuserdata(res.data.userdata);
      
       return res

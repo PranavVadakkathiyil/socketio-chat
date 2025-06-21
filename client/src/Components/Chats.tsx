@@ -7,7 +7,7 @@ import { MdGroups } from 'react-icons/md'
 import { Link, useNavigate } from 'react-router-dom'
 import { createChats, GetAllChats } from '../apis/ChatApi'
 import { getUserInfo } from '../apis/UserApi'
-import AddToGroup from './AddToGroup'
+import toast from 'react-hot-toast'
 
 type User = {
   _id: string
@@ -17,6 +17,7 @@ type User = {
 }
 
 type Chat = {
+  receiverInfo: any
   _id: string
   chatname: string
   isGroupChat: boolean
@@ -36,13 +37,16 @@ const Chats = () => {
   const searchuser = async (search: string) => {
     const res = await getUserInfo(search)
     setsearchdata(res.data.user)
-    console.log("search", res.data)
+   
+
   }
 
   const setusertochat = async (id: string) => {
     try {
       const res = await createChats(id)
-      console.log("setusertochat", res.data)
+      if(res.data.success){
+        toast.success("New chat created")
+      }
       getchat()
     } catch (error) {
       console.log(error)
@@ -53,6 +57,9 @@ const Chats = () => {
     try {
       const res = await GetAllChats()
       setallchat(res.data.fullChat)
+      
+
+
     } catch (error) {
       console.log("Error Getallchat", error)
     }
@@ -62,11 +69,12 @@ const Chats = () => {
     getchat()
   }, [])
 
+
   return (
     <div className=''>
 
       {/* AddToGroup Modal Overlay */}
-      
+
 
       {/* Main Chat Section */}
       <div className='w-full sm:h-[90dvh] h-[90dvh] flex flex-col border border-gray-300'>
@@ -80,11 +88,11 @@ const Chats = () => {
               {addGroup ? (
                 <ImCross onClick={() => setaddGroup(false)} />
               ) : (
-                <MdGroups onClick={() => {setaddGroup(true);navigate('/add')}} />
+                <MdGroups onClick={() => { setaddGroup(true); navigate('/add') }} />
               )}
             </p>
 
-            {/* Individual Chat Icon */}
+
             <p className={`border p-3 rounded-full ${addGroup ? 'pointer-events-none opacity-50' : ""}`}>
               {searchbar ? (
                 <FaPlus onClick={() => setsearchbar(!searchbar)} />
@@ -101,13 +109,19 @@ const Chats = () => {
             {allchat.map((data, i) => (
               <Link to={`/chat/${data._id}`} key={i}>
                 <div className="flex items-center gap-3 p-2 border border-gray-300 rounded mb-2 bg-white">
-                  <img
-                    src={loginimg}
-                    alt=""
-                    className="w-12 h-12 border border-gray-500 rounded-full object-cover"
-                  />
+                  <div className="w-12 h-12 border border-gray-500 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                    {data.isGroupChat ? (
+                      <MdGroups className="text-2xl text-gray-400" />
+                    ) : (
+                      <img
+                        src={data.receiverInfo?.avatar || loginimg}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    )}
+                  </div>
                   <div className="flex-1">
-                    <p className="font-semibold">{data.chatname}</p>
+                    <p className="font-semibold">{data.isGroupChat ? data.chatname : data.receiverInfo?.username || "Unknown User"}</p>
                     <p className="text-sm text-gray-600">
                       {data.latestMessage?.content || "Start conversation..."}
                     </p>
@@ -137,7 +151,7 @@ const Chats = () => {
 
             {/* Search Result List */}
             {searchdata.map((data, i) => (
-              <div key={i} onClick={() => setusertochat(data._id)} className="cursor-pointer flex items-center gap-3 p-2 border border-gray-300 rounded mb-2 bg-white">
+              <div key={i} onClick={() => { setusertochat(data._id); setsearchbar(true) }} className="cursor-pointer flex items-center gap-3 p-2 border border-gray-300 rounded mb-2 bg-white">
                 <img src={data.avatar} alt="" className="w-12 h-12 border border-gray-500 rounded-full object-cover" />
                 <div className="flex-1">
                   <p className="font-semibold">{data.username}</p>

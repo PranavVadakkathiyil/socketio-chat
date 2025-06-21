@@ -25,7 +25,7 @@ const AddToGroup: React.FC = () => {
 
             const res = await getUserInfo(query)
 
-            console.log("search", res.data.user);
+           
             setResults(res.data.user); // assuming response is User[]
         } catch (error) {
             console.error('Error searching users:', error);
@@ -44,11 +44,11 @@ const AddToGroup: React.FC = () => {
     };
     const makegroup = async()=>{
         if(!groupname) return
-        console.log("Users",addedItems);
+       
         const users = addedItems.map((user)=>user._id)
         try {
             const res =await createGroup(users,groupname)
-            console.log(res.data.groupchat);
+          
             if(res.data.success){
                 toast.success("Created chat group")
                 navigate('/home')

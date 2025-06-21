@@ -10,7 +10,7 @@ const AddgroupContext = createContext<AddGrouptype|undefined>(undefined)
 export const ContextProvider = ({children}:{children:React.ReactNode})=>{
 
     const [open, setopen] = useState(false)
-    console.log(open,"context");
+    
     
     return(
         <AddgroupContext.Provider value={{open,setopen}}>
