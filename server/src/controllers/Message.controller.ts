@@ -49,7 +49,8 @@ const GetAllMessages = async (
     if (!isGroupChat) {
       receiver = users.find((u: any) => u._id.toString() !== senderId.toString());
     }
-
+    
+    
     res.status(200).json({
       success: true,
       message: "Fetched Message for chat",
